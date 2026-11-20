@@ -1,0 +1,64 @@
+# E101 distill observer (docs/plan-2026-10-30-distill-observer.md): DeepSeek-R1-Distill-Llama-8B BF16 residual states reading
+# the exact conversations and reasoning prefixes Qwen3.5-9B produced in InjecForks v1.2, the prefix inside the observer's own
+# <think>. Modelled on configs/e79v2-9b-pod.yaml: same rows, same N, same layer indices (both models have 32 layers), same
+# state layout, so injecforks_probe.py trains on it unchanged. The same pod then runs E79's test cache check on the 9B
+# (configs/e101-9b-testcache.yaml). Fill config_sha256 (sha256sum of the listed files) right before launch.
+experiment: E101
+artifact_repo: anonymous/distill-observer-states   # must exist and be private before launch; run() refuses otherwise
+dataset_revision: v1.2
+upload_every_s: 600
+min_cache_cosine: 0.995
+generator:
+  model_id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+  revision: 6a6f4aa4197940add57724a7707d069478df56b1   # Hub main, 2025-02-24; its tokenizer_config.json chat template is the one rendered
+  quant: bf16
+  loader: causal
+  n_layers: 32
+actor_tokenizer:   # the 9B's tokenizer: re-asserts each cut is the 9B's N-th token end, and the 9B's billed prompt, per case
+  model_id: Qwen/Qwen3.5-9B
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+d_model: 4096
+layers: [8, 12, 16, 20, 24, 26, 28, 30, 32]   # E79 v2's indices; 32 of 32 layers in both models, so the same relative depths
+ncut: [8, 16, 32, 64, 128]
+select:            # all = every row; eval = the eval-v1.2 rows (test is scored on those only). As E79 v2.
+  smoke: {train: all, dev: all, test: eval}
+  realistic: {train: all, dev: all, test: eval}
+  smoke-benign: {train: all, dev: all, test: eval}
+  realistic-benign: {train: all, dev: all, test: eval}
+smoke_generator:   # local 6 GB check of every line the pod runs; the observer's tokenizer so every rendering assertion holds
+  model_id: unsloth/Llama-3.2-1B-Instruct
+  revision: 5a8abab4a5d6f164389b1079fb721cfab8d7126c
+  tokenizer_id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+  tokenizer_revision: 6a6f4aa4197940add57724a7707d069478df56b1
+  quant: bf16
+  loader: causal
+  n_layers: 16
+  smoke_cast: float16   # local RTX 2060 (sm75): bf16 SDPA falls back to the math kernel and a 7k-token realistic forward overflows 6 GB
+smoke_layers: [4, 8, 12, 16]
+smoke_d_model: 2048
+smoke_cases: 2
+config_sha256:
+  injecforks_observer_states.py: 4b900f730a058b873bc18a10a60439bd56a1a685caa6e046e8a68d2a85b95c98
+  observer_render.py: 0524deefedaac08cd367214054b8c968b4b3c0f0c65ccff3b23d1e9d00bd84ee
+  injecforks_states.py: fc4fd8c72f93e32384eca2a4156189a84c35fcef4879a3f9efa249e0224204c8
+  injecforks_load.py: a6141098f3d82061e1b06c76eae71a686753bf2a32d32ba74486e9e022737c88
+  common.py: e4c45bae1d43fecea51f477c4552c9ce6af60c1d2aacf3403f99a9cf2db8c669
+  run_e101_pod.sh: 7bb9a3aed342b010359531a6cf497af3ac66bbf7700fc75441fde713b8d371a1
+  configs/e101-9b-testcache.yaml: 68ff5ad3540f8c9d55d4d055ccad96d2857a24f318cd5b1a6d3e342afcd797fc
+pod:
+  script: prototypes/violation-forecast/run_e101_pod.sh
+  model_id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+  params_b: 8.03           # infra/models.yaml
+  dtype: bf16
+  vram_gib: 40               # as E79 v2 (9B peaked at 19.9 GiB); the 8B (16.1 GB weights) and the 9B run one after the other
+  container_disk_gb: 80
+  volume: false              # builds its own venv and downloads the weights, as E79 v2
+  cuda_versions: any
+  min_cuda: "13.0"           # torch==2.14.0 from PyPI is the cu130 build
+  est_hours_reference: 0.9   # E79 v2 measured 2.61 h on an A40 (= 0.91 h reference) for the same reads with the 9B; the 8B is
+                             # 0.83x its parameters but 14.6 % of rows need a 2nd prefix forward; + ~0.04 h for the 9B test
+                             # cache check (19 GB download, load, 3 cases). Unmeasured: compare with the bill after the run
+  results:
+  - prototypes/violation-forecast/results/e101-cloud/*.json
+  - prototypes/violation-forecast/results/e101-cloud/stage-logs/*.log
+  - prototypes/violation-forecast/results/e79v2-cloud/testcache/*.json

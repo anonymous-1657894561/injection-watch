@@ -1,0 +1,22 @@
+# E129 (experiments/E129-agentdojo-multi-attack.md): gpt-oss-20b, test phase. One pod: vLLM generation (518 prefixes + ~12,400 test U / P / T continuations (3 held-out templates x 160 pairs + 38 clean)), then HF states.
+# Run parameters: configs/e129.yaml, configs/e117.yaml (model, template, sampler) and results/e129/manifest.json, committed with the
+# pre-registration.
+experiment: E129
+split: test
+model: gpt-oss-20b
+phase: test
+pod:
+  script: prototypes/violation-forecast/run_e129_pod.sh
+  model_id: openai/gpt-oss-20b    # MXFP4 13.8 GB in vLLM; dequantised to bf16 (~42 GB) for the HF state pass (E125)
+  dtype: bf16
+  vram_gib: 60
+  container_disk_gb: 80              # weights once + vLLM's venv + the client venv (E117 / E125: 80 GB)
+  volume: false
+  cuda_versions: any                 # vLLM 0.30.0's wheel needs CUDA >= 13 (E117)
+  min_cuda: "13.0"
+  # NOT MEASURED. Reference A100-80 hours scaled from E125 (7,150 gpt-oss episode-equivalents + states in 1.12 h on an A100-SXM, setup
+  # included); Qwen3.5-9B assumed 1.4x slower per episode (longer thinking turns).
+  est_hours_reference: 2.0
+  results:
+  - prototypes/violation-forecast/results/e129-cloud/gpt-oss-20b-test/*.json
+  - prototypes/violation-forecast/results/e129-cloud/gpt-oss-20b-test/stage-logs/*.log

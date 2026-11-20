@@ -1,0 +1,29 @@
+# E101 side check for E79's test read (decisions/README.md 2026-10-29 checklist: "cache cosine on 3 test cases").
+# injecforks_states.py `cachecheck` on Qwen3.5-9B, exactly E79 v2's model, revision, layers and N, over the first 3
+# realistic test eval cases only: the cached-vs-full forward cosine at every read, nothing uploaded to the Hub.
+# -> results/e79v2-cloud/testcache/cache_check.json ([{row_id, min_cosine}], what e79_final.py --cache-check reads).
+# Run by run_e101_pod.sh after the observer extraction; its drift check is configs/e101-distill-observer-pod.yaml's config_sha256.
+experiment: E101 (E79 test cache check)
+dataset_revision: v1.2
+max_cases: 3
+generator:          # = configs/e79v2-9b-pod.yaml
+  model_id: Qwen/Qwen3.5-9B
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 32
+d_model: 4096
+layers: [8, 12, 16, 20, 24, 26, 28, 30, 32]
+ncut: [8, 16, 32, 64, 128]
+select:
+  realistic: {test: eval}
+smoke_generator:    # cachecheck-local: the 0.8B on the local 6 GB GPU, 9B tokenizer (as configs/e79v2-9b-pod.yaml)
+  model_id: Qwen/Qwen3.5-0.8B
+  revision: 2fc06364715b967f1860aea9cf38778875588b17
+  tokenizer_id: Qwen/Qwen3.5-9B
+  tokenizer_revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 24
+smoke_layers: [6, 12, 18, 24]
+smoke_d_model: 1024

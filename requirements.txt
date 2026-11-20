@@ -1,0 +1,29 @@
+# Python 3.12. Main environment: every analysis script and every transformers-based GPU run (states, self-report,
+# reminder, resampling, steering, timing, text readers). Pins are the versions the original runs used.
+torch==2.14.0
+transformers==5.16.1
+accelerate==1.14.0
+bitsandbytes==0.50.2
+huggingface-hub==1.32.0
+numpy==2.5.2
+scipy==1.18.1
+scikit-learn==1.9.0
+joblib==1.6.0
+pandas==3.0.5
+PyYAML==6.0.3
+matplotlib==3.11.1
+fonttools==4.65.0
+requests==2.34.2
+httpx==0.28.1
+openai==3.49.0
+sentence-transformers==5.5.0
+# Version not recorded for the original runs (used by e134_dev.py and e136_final.py: conditional logit).
+statsmodels
+
+# Second environment (vLLM), for the rollout and AgentDojo runs; vLLM pins its own torch, so do not mix it with the above.
+#   Qwen3.5-27B rollouts (e112_rollouts.py):
+#     vllm==0.32.0 transformers==5.16.1 huggingface-hub==1.32.0 PyYAML==6.0.3
+#   gpt-oss-20b server and states (e125_*, e129_*, e140_*):
+#     vllm==0.30.0 PyYAML==6.0.3 accelerate openai-harmony==0.0.8 ninja
+#   AgentDojo client (e125_agentdojo.py, e129_agentdojo.py), its own venv:
+#     agentdojo==0.1.35 openai-harmony==0.0.8 transformers==5.16.1 jinja2==3.1.6 requests==2.32.5 PyYAML==6.0.3

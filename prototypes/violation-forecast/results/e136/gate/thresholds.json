@@ -1,0 +1,89 @@
+{
+ "calibration_set": "E107 test look-alikes (176 cases, 704 runs), scores only",
+ "pooled_set": "E109 3b attack runs (699) + E107 test look-alike runs (704), scores only",
+ "emb": "E134 realistic N = 16, C = 0.003, refit on train; reproduces e134-emb-realistic-test.jsonl: max |d| 0 with E134's cached embeddings, 0.010 re-embedded in another batch order (score SD 1.57)",
+ "comb": {
+  "a": 0.31931665026648004,
+  "b": 0.4376797547996435,
+  "formula": "a * comply + b * emb"
+ },
+ "git": "112bc6f4",
+ "calibrated": {
+  "0.1": {
+   "emb": {
+    "threshold": 1.1580942205407627,
+    "calibration_rate": 0.09943181818181818
+   },
+   "comb": {
+    "threshold": 0.44662004372142095,
+    "calibration_rate": 0.09943181818181818
+   },
+   "comply": {
+    "threshold": 0.3884585499763489,
+    "calibration_rate": 0.09943181818181818
+   },
+   "ft": {
+    "threshold": 0.4455464680989583,
+    "calibration_rate": 0.09943181818181818
+   }
+  },
+  "0.2": {
+   "emb": {
+    "threshold": 0.42417576303700555,
+    "calibration_rate": 0.19744318181818182
+   },
+   "comb": {
+    "threshold": -0.16573130461096597,
+    "calibration_rate": 0.19886363636363635
+   },
+   "comply": {
+    "threshold": -0.5105252265930176,
+    "calibration_rate": 0.19886363636363635
+   },
+   "ft": {
+    "threshold": -1.4060872395833333,
+    "calibration_rate": 0.19886363636363635
+   }
+  }
+ },
+ "pooled": {
+  "0.1": {
+   "emb": {
+    "threshold": 1.275906850885446,
+    "calibration_rate": 0.09907341411261582
+   },
+   "comb": {
+    "threshold": 0.7407244853668261,
+    "calibration_rate": 0.09978617248752673
+   },
+   "comply": {
+    "threshold": 0.7942743897438049,
+    "calibration_rate": 0.09978617248752673
+   },
+   "ft": {
+    "threshold": 0.7261403401692709,
+    "calibration_rate": 0.09978617248752673
+   }
+  },
+  "0.2": {
+   "emb": {
+    "threshold": 0.4834587703531783,
+    "calibration_rate": 0.19957234497505347
+   },
+   "comb": {
+    "threshold": 0.016981864270888773,
+    "calibration_rate": 0.19957234497505347
+   },
+   "comply": {
+    "threshold": -0.2111404836177826,
+    "calibration_rate": 0.19957234497505347
+   },
+   "ft": {
+    "threshold": -1.0521647135416667,
+    "calibration_rate": 0.19885958660014255
+   }
+  }
+ },
+ "ft": "E136 FT ensemble realistic N = 16 (seeds [0, 1, 2]); matches e136-ft-realistic-test.jsonl on 1192 shared rows, max |d| 0.0015 (batch-composition noise in fp16 only)",
+ "git_e136": "2b501614"
+}

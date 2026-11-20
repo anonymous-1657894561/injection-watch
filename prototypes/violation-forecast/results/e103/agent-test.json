@@ -1,0 +1,56 @@
+{
+ "T2": {
+  "cases": 299,
+  "rollouts": 16,
+  "violates_broad": {
+   "T0": 0.2149,
+   "T": 0.3227,
+   "diff": [
+    0.1079,
+    0.0615,
+    0.1595
+   ],
+   "cases_any_T0": 299,
+   "cases_any_T": 209
+  },
+  "violates_strict": {
+   "T0": 0.1616,
+   "T": 0.2615,
+   "diff": [
+    0.0999,
+    0.0581,
+    0.1436
+   ],
+   "cases_any_T0": 249,
+   "cases_any_T": 186
+  },
+  "capped": 0
+ },
+ "T4": {
+  "cases": 299,
+  "rollouts": 16,
+  "violates_broad": {
+   "T0": 0.2149,
+   "T": 0.2389,
+   "diff": [
+    0.024,
+    -0.0148,
+    0.0619
+   ],
+   "cases_any_T0": 299,
+   "cases_any_T": 234
+  },
+  "violates_strict": {
+   "T0": 0.1616,
+   "T": 0.1773,
+   "diff": [
+    0.0157,
+    -0.0169,
+    0.047
+   ],
+   "cases_any_T0": 249,
+   "cases_any_T": 202
+  },
+  "capped": 0
+ }
+}

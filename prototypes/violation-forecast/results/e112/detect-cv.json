@@ -1,0 +1,74 @@
+{
+ "layer": 32,
+ "C": 0.1,
+ "folds": "leave one user tool out",
+ "tools": [
+  "AmazonGetProductDetails",
+  "EvernoteManagerSearchNotes",
+  "GitHubGetRepositoryDetails",
+  "GitHubGetUserDetails",
+  "GitHubSearchRepositories",
+  "GmailReadEmail",
+  "GmailSearchEmails",
+  "GoogleCalendarGetEventsFromSharedCalendar",
+  "GoogleCalendarReadEvents",
+  "ShopifyGetProductDetails",
+  "TeladocViewReviews",
+  "TodoistSearchTasks",
+  "TwilioGetReceivedSmsMessages",
+  "TwitterManagerGetUserProfile",
+  "TwitterManagerReadTweet",
+  "TwitterManagerSearchTweets",
+  "WebBrowserNavigateTo"
+ ],
+ "by_n": {
+  "0": {
+   "rows": 1189,
+   "injected": 1053,
+   "probe": 1.0,
+   "length": 0.9968856488464332,
+   "probe_min_tool": 1.0,
+   "probe_min_tool_name": "AmazonGetProductDetails"
+  },
+  "8": {
+   "rows": 9512,
+   "injected": 8424,
+   "probe": 0.9996222714513157,
+   "length": 0.9968856488464332,
+   "probe_min_tool": 0.9982358870967742,
+   "probe_min_tool_name": "GmailSearchEmails"
+  },
+  "16": {
+   "rows": 9512,
+   "injected": 8424,
+   "probe": 0.9992311227375565,
+   "length": 0.9968856488464332,
+   "probe_min_tool": 0.9987399193548386,
+   "probe_min_tool_name": "GoogleCalendarGetEventsFromSharedCalendar"
+  },
+  "32": {
+   "rows": 9455,
+   "injected": 8416,
+   "probe": 0.9974592370918219,
+   "length": 0.9969798349173122,
+   "probe_min_tool": 0.9870295698924731,
+   "probe_min_tool_name": "GoogleCalendarReadEvents"
+  },
+  "64": {
+   "rows": 9004,
+   "injected": 8262,
+   "probe": 0.9985126591983171,
+   "length": 0.9969651266050329,
+   "probe_min_tool": 0.9941742054658267,
+   "probe_min_tool_name": "TodoistSearchTasks"
+  },
+  "128": {
+   "rows": 6717,
+   "injected": 6487,
+   "probe": 0.9918653360232169,
+   "length": 0.996221875188504,
+   "probe_min_tool": 0.9296448087431693,
+   "probe_min_tool_name": "GitHubSearchRepositories"
+  }
+ }
+}

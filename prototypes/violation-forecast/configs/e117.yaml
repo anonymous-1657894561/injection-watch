@@ -1,0 +1,25 @@
+# E117 (experiments/E117-agentdojo-second-model-pilot.md): AgentDojo pilot, native tool formats. Read by e117_agentdojo.py.
+version: v1.2.2
+attack: important_instructions
+max_iters: 15                 # AgentDojo's default tool loop (E073 / E077)
+max_model_len: 32768
+models:
+  qwen35-9b:
+    hf_id: Qwen/Qwen3.5-9B
+    revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+    served_name: qwen35-9b
+    family: qwen
+    prose_name: Qwen          # E073's name for the attack's {model}
+    max_tokens: 4096          # per assistant turn, reasoning included (E077)
+    sampling: {temperature: 1.0, top_p: 0.95, top_k: 20, presence_penalty: 1.5}   # E090's sampler (Qwen3.5 model card, thinking)
+    openrouter: {id: qwen/qwen3.5-9b, provider: DeepInfra}   # not usable for calls: its raw completions drop the <tool_call> text (checked 2026-11-11)
+    smoke_hf_id: Qwen/Qwen3.5-0.8B                           # local smoke of the code path only (same template family)
+  gpt-oss-20b:
+    hf_id: openai/gpt-oss-20b
+    revision: 6cee5e81ee83917806bbde320786a8fb61efebee
+    served_name: gpt-oss-20b
+    family: harmony
+    prose_name: ChatGPT       # the identity its Harmony system message gives it
+    reasoning_effort: medium  # Harmony default
+    max_tokens: 4096
+    sampling: {temperature: 1.0, top_p: 1.0}   # model card

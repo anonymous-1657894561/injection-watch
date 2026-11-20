@@ -1,0 +1,114 @@
+{
+ "n_positive": 76,
+ "n_lookalike": 702,
+ "methods": {
+  "compliance probe (N=16)": {
+   "recall@0.01": {
+    "estimate": 0.026,
+    "actual_fpr": 0.01,
+    "ci95": [
+     0.0,
+     0.103
+    ]
+   },
+   "recall@0.05": {
+    "estimate": 0.289,
+    "actual_fpr": 0.05,
+    "ci95": [
+     0.149,
+     0.436
+    ]
+   },
+   "recall@0.1": {
+    "estimate": 0.526,
+    "actual_fpr": 0.1,
+    "ci95": [
+     0.368,
+     0.662
+    ]
+   },
+   "auroc_violating_vs_lookalike": 0.801
+  },
+  "detection probe (prompt)": {
+   "recall@0.01": {
+    "estimate": 0.224,
+    "actual_fpr": 0.006,
+    "ci95": [
+     0.073,
+     0.438
+    ]
+   },
+   "recall@0.05": {
+    "estimate": 0.421,
+    "actual_fpr": 0.046,
+    "ci95": [
+     0.243,
+     0.594
+    ]
+   },
+   "recall@0.1": {
+    "estimate": 0.579,
+    "actual_fpr": 0.097,
+    "ci95": [
+     0.347,
+     0.747
+    ]
+   },
+   "auroc_violating_vs_lookalike": 0.896
+  },
+  "PIGuard": {
+   "recall@0.01": {
+    "estimate": 0.0,
+    "actual_fpr": 0.006,
+    "ci95": [
+     0.0,
+     0.063
+    ]
+   },
+   "recall@0.05": {
+    "estimate": 0.132,
+    "actual_fpr": 0.046,
+    "ci95": [
+     0.0,
+     0.295
+    ]
+   },
+   "recall@0.1": {
+    "estimate": 0.263,
+    "actual_fpr": 0.091,
+    "ci95": [
+     0.073,
+     0.44
+    ]
+   },
+   "auroc_violating_vs_lookalike": 0.597
+  },
+  "PromptGuard 2 86M": {
+   "recall@0.01": {
+    "estimate": 0.0,
+    "actual_fpr": 0.0,
+    "ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "recall@0.05": {
+    "estimate": 0.026,
+    "actual_fpr": 0.046,
+    "ci95": [
+     0.0,
+     0.08
+    ]
+   },
+   "recall@0.1": {
+    "estimate": 0.026,
+    "actual_fpr": 0.091,
+    "ci95": [
+     0.0,
+     0.113
+    ]
+   },
+   "auroc_violating_vs_lookalike": 0.325
+  }
+ }
+}

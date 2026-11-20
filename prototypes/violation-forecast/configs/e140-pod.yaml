@@ -1,0 +1,19 @@
+# E140 (experiments/E140-injecforks-gptoss.md): gpt-oss-20b on InjecForks, one pod: vLLM generation (train U; test U and P only if the frozen
+# eligibility rule passes on train), then the HF N = 0 state pass. Inputs: data/e140/inputs.jsonl (artifact repo e140/inputs/), configs/e140.yaml.
+experiment: E140
+split: test
+pod:
+  script: prototypes/violation-forecast/run_e140_pod.sh
+  model_id: openai/gpt-oss-20b       # MXFP4 in vLLM; dequantised to bf16 (~42 GB) for the HF state pass (E125)
+  dtype: bf16
+  vram_gib: 60
+  container_disk_gb: 80
+  volume: false
+  cuda_versions: any
+  min_cuda: "13.0"
+  # NOT MEASURED; scaled from E125/E133: setup 0.35, HF states smoke 0.15, generation 1.1 (17,752 single-step calls: 8,728 train U,
+  # 4,512 test U, 4,512 test P; ~3.9k-token prompts, prefix-cached per input), HF states 0.7 (1,655 prefills of ~3.9k tokens), slack 0.2.
+  est_hours_reference: 2.5
+  results:
+  - prototypes/violation-forecast/results/e140-cloud/*.json
+  - prototypes/violation-forecast/results/e140-cloud/stage-logs/*.log

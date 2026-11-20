@@ -1,0 +1,42 @@
+# E102: E101's Distill observer states on the look-alike configs (InjecForks v1.4). Same model, revision, rendering, layers
+# and reads as configs/e101-distill-observer-pod.yaml; only the rows differ. Run by run_e102_pod.sh after the 9B.
+experiment: E102
+out_name: e102-distill-lookalike
+artifact_repo: anonymous/distill-observer-states   # must exist and be private before launch; run() refuses otherwise
+dataset_revision: v1.4
+upload_every_s: 600
+min_cache_cosine: 0.995
+generator:
+  model_id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+  revision: 6a6f4aa4197940add57724a7707d069478df56b1   # Hub main, 2025-02-24; its tokenizer_config.json chat template is the one rendered
+  quant: bf16
+  loader: causal
+  n_layers: 32
+actor_tokenizer:   # the 9B's tokenizer: re-asserts each cut is the 9B's N-th token end, and the 9B's billed prompt, per case
+  model_id: Qwen/Qwen3.5-9B
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+d_model: 4096
+layers: [8, 12, 16, 20, 24, 26, 28, 30, 32]   # E79 v2's indices; 32 of 32 layers in both models, so the same relative depths
+ncut: [8, 16, 32, 64, 128]
+select:            # as configs/e102-9b-lookalike-pod.yaml
+  smoke-lookalike: {dev: all, test: eval}
+  realistic-lookalike: {dev: all, test: eval}
+smoke_generator:   # local 6 GB check of every line the pod runs; the observer's tokenizer so every rendering assertion holds
+  model_id: unsloth/Llama-3.2-1B-Instruct
+  revision: 5a8abab4a5d6f164389b1079fb721cfab8d7126c
+  tokenizer_id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+  tokenizer_revision: 6a6f4aa4197940add57724a7707d069478df56b1
+  quant: bf16
+  loader: causal
+  n_layers: 16
+  smoke_cast: float16   # local RTX 2060 (sm75): bf16 SDPA falls back to the math kernel and a 7k-token realistic forward overflows 6 GB
+smoke_layers: [4, 8, 12, 16]
+smoke_d_model: 2048
+smoke_cases: 2
+config_sha256:
+  injecforks_observer_states.py: 6dc0033ac1ba05881bcaf5613f25ab64f5c9ce378397628c3fa88e59d81389ad
+  observer_render.py: 0524deefedaac08cd367214054b8c968b4b3c0f0c65ccff3b23d1e9d00bd84ee
+  injecforks_states.py: 0d9213e3e07b1a61c7afc0a8078cf0fd9fe128e502395c1f4bbd6771a8ffb276
+  injecforks_load.py: d8eea093f0cf4c934e73a13146e7b29aea106f83dcd905f27822d5f1c05e19a5
+  common.py: e4c45bae1d43fecea51f477c4552c9ce6af60c1d2aacf3403f99a9cf2db8c669
+  run_e102_pod.sh: 2f48d03826d4690a668754c1f9ed2abb906417699651924815cc62c2646b54c1

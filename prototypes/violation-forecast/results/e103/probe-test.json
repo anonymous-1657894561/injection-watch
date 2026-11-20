@@ -1,0 +1,124 @@
+{
+ "t0_reproduction": {
+  "rows": 2392,
+  "max_abs_diff": 0.0025370121002197266,
+  "auroc_refit": 0.7518563863672559,
+  "auroc_frozen": 0.7518563863672559
+ },
+ "8": {
+  "T0 within-case (violates)": {
+   "mixed": 299,
+   "auroc": 0.687
+  },
+  "T2 vs T0 (violates)": {
+   "mixed": 202,
+   "auroc": 0.565,
+   "both": 202,
+   "T_same_cases": 0.565,
+   "T0_same_cases": 0.669,
+   "diff": [
+    -0.104,
+    -0.147,
+    -0.06
+   ]
+  },
+  "T4 vs T0 (violates)": {
+   "mixed": 233,
+   "auroc": 0.657,
+   "both": 233,
+   "T_same_cases": 0.657,
+   "T0_same_cases": 0.678,
+   "diff": [
+    -0.021,
+    -0.058,
+    0.015
+   ]
+  },
+  "T0 within-case (raw_broad)": {
+   "mixed": 299,
+   "auroc": 0.687
+  },
+  "T2 vs T0 (raw_broad)": {
+   "mixed": 202,
+   "auroc": 0.565,
+   "both": 202,
+   "T_same_cases": 0.565,
+   "T0_same_cases": 0.669,
+   "diff": [
+    -0.104,
+    -0.146,
+    -0.061
+   ]
+  },
+  "T4 vs T0 (raw_broad)": {
+   "mixed": 233,
+   "auroc": 0.657,
+   "both": 233,
+   "T_same_cases": 0.657,
+   "T0_same_cases": 0.678,
+   "diff": [
+    -0.021,
+    -0.058,
+    0.015
+   ]
+  }
+ },
+ "16": {
+  "T0 within-case (violates)": {
+   "mixed": 299,
+   "auroc": 0.744
+  },
+  "T2 vs T0 (violates)": {
+   "mixed": 202,
+   "auroc": 0.64,
+   "both": 202,
+   "T_same_cases": 0.64,
+   "T0_same_cases": 0.743,
+   "diff": [
+    -0.104,
+    -0.148,
+    -0.06
+   ]
+  },
+  "T4 vs T0 (violates)": {
+   "mixed": 233,
+   "auroc": 0.732,
+   "both": 233,
+   "T_same_cases": 0.732,
+   "T0_same_cases": 0.747,
+   "diff": [
+    -0.015,
+    -0.046,
+    0.017
+   ]
+  },
+  "T0 within-case (raw_broad)": {
+   "mixed": 299,
+   "auroc": 0.742
+  },
+  "T2 vs T0 (raw_broad)": {
+   "mixed": 202,
+   "auroc": 0.64,
+   "both": 202,
+   "T_same_cases": 0.64,
+   "T0_same_cases": 0.742,
+   "diff": [
+    -0.102,
+    -0.145,
+    -0.06
+   ]
+  },
+  "T4 vs T0 (raw_broad)": {
+   "mixed": 233,
+   "auroc": 0.732,
+   "both": 233,
+   "T_same_cases": 0.732,
+   "T0_same_cases": 0.746,
+   "diff": [
+    -0.014,
+    -0.045,
+    0.019
+   ]
+  }
+ }
+}

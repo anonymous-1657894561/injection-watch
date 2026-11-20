@@ -1,0 +1,65 @@
+# E112 (experiments/E112-qwen35-27b-scaling.md): Qwen3.5-27B's own rollouts on InjecForks' realistic prompts (e112_rollouts.py,
+# vLLM), then its residual states along them (injecforks_states.py), on one pod (run_e112_pod.sh).
+# Fill config_sha256 (sha256sum of the listed files) right before launch.
+experiment: E112
+artifact_repo: anonymous/e112-states          # private model repo: states + receipts
+dataset_repo: anonymous/e112-27b-rollouts     # private dataset repo the rollouts are written to and states read from
+dataset_revision: main
+upload_every_s: 600
+min_cache_cosine: 0.95   # bug tripwire only (E112 amendment 2026-11-11): bf16 drift gave 0.983 on the 27B's first read; the 9B's own pods gave 0.966 and 0.977
+skip_rollouts: true      # rollouts are on dataset_repo (pod 2026-11-10T195111Z); run_e112_pod.sh runs the states stage only
+out_name: e112
+generator:
+  model_id: Qwen/Qwen3.5-27B
+  revision: fc05daec18b0a78c049392ed2e771dde82bdf654
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 64
+d_model: 5120
+layers: [16, 24, 32, 40, 48, 52, 56, 60, 64]   # the 9B's [8, 12, 16, 20, 24, 26, 28, 30, 32] at the same relative depth
+ncut: [8, 16, 32, 64, 128]
+select:
+  realistic: {train: all, dev: all, test: all}   # test = the 374-case draw (17 per user tool), all rollouts
+  realistic-benign: {train: all, dev: all}
+rollouts:
+  source_revision: v1.2       # InjecForks prompts and case columns
+  k: 8
+  test_per_user_tool: 17      # 22 user tools x 17 = 374 test cases
+  test_seed: 112
+  gate_min_strict: 0.10       # realistic dev strict compliance below this: the screen was a server artefact; stop
+  max_model_len: 16384        # longest prompt ~8k + 4,096 output
+  gpu_memory_utilization: 0.90
+  max_num_seqs: 256           # one Mamba (GDN) cache block per running sequence: 637 fit on a 96 GB RTX PRO 6000, fewer on an A100-80; vLLM's default 1024 failed (2026-11-10)
+  smoke_max_tokens: 160
+smoke_generator:   # local 6 GB check of every line the pod runs; tokenizer files are byte-identical across 0.8B/9B/27B templates
+  model_id: Qwen/Qwen3.5-0.8B
+  revision: 2fc06364715b967f1860aea9cf38778875588b17
+  tokenizer_id: Qwen/Qwen3.5-27B
+  tokenizer_revision: fc05daec18b0a78c049392ed2e771dde82bdf654
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 24
+smoke_layers: [6, 12, 18, 24]
+smoke_d_model: 1024
+smoke_cases: 2
+smoke_dataset_root: data/e112/smoke-rollouts
+config_sha256:
+  requirements-e112-vllm.txt: dcf35f7cac3fe8884445425c110f33100e4a644d4f296f8316310d6c72a0218b
+  e112_rollouts.py: 1e4a3b3624391443ede711f15c1780cbd37dbd274b38a12d6f566249b57ad87c
+  injecforks_states.py: 0e44a9756ee0f7e2cdae9f65121bb8018812af24413491c6c4fab348fcb4290b
+  common.py: e4c45bae1d43fecea51f477c4552c9ce6af60c1d2aacf3403f99a9cf2db8c669
+  run_e112_pod.sh: 8e231a2208d9398d82ed10180c4fd177e4daa48ae311039936be2c0e0bf3aaa8
+pod:
+  script: prototypes/violation-forecast/run_e112_pod.sh
+  model_id: Qwen/Qwen3.5-27B
+  dtype: bf16
+  vram_gib: 72
+  container_disk_gb: 150     # 27B weights ~56 GB + two venvs + states
+  volume: false
+  cuda_versions: any
+  min_cuda: "13.0"
+  est_hours_reference: 3.0   # states only (~2-3 h, E79 v2's 2.61 h A40 x 2.9 params / ~2 A100) + setup; rollouts took 1.4 h on an RTX PRO 6000
+  results:
+  - prototypes/violation-forecast/results/e112-cloud/*.json
+  - prototypes/violation-forecast/results/e112-cloud/stage-logs/*.log
+  - prototypes/violation-forecast/results/e79v2-cloud/e112/*.json

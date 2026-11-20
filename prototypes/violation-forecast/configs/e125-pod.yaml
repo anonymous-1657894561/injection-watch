@@ -1,0 +1,21 @@
+# E125 (experiments/E125-agentdojo-gptoss-heldout.md): held-out gpt-oss-20b AgentDojo gate test, one pod: vLLM generation (prefixes to the
+# eligible checkpoint, paired continuations U / P / T), then HF transformers states (N = 0, N = 16). Run parameters: configs/e125.yaml,
+# configs/e117.yaml (model, Harmony, sampler) and results/e125/manifest.json, committed with the pre-registration.
+experiment: E125
+split: test
+pod:
+  script: prototypes/violation-forecast/run_e125_pod.sh
+  model_id: openai/gpt-oss-20b       # MXFP4 13.8 GB in vLLM; dequantised to bf16 (~42 GB) for the HF state pass
+  dtype: bf16
+  vram_gib: 60                       # the HF bf16 pass: 42 GB weights + chunked eager prefill of up to ~14 k tokens + KV cache
+  container_disk_gb: 80              # weights once (shared HF cache) + vLLM's venv + the client venv (E117: 80 GB)
+  volume: false
+  cuda_versions: any                 # vLLM 0.30.0's wheel needs CUDA >= 13 (E117)
+  min_cuda: "13.0"
+  # NOT MEASURED. Reference A100-80 hours: setup 0.35 (E117: vLLM + client venvs), HF states smoke 0.15 (download + load), generation 0.8
+  # (~7,150 episode-equivalents: 442 prefixes, 1,952 dev U, 4,752 test U / P / T; E117 ran 552 gpt-oss episodes in 8 min on an A40, ~0.35
+  # of an A100), HF states 0.8 (442 chunked prefills + ~3,500 19-token extensions; eager MoE in HF, unmeasured), slack 0.1.
+  est_hours_reference: 2.2
+  results:
+  - prototypes/violation-forecast/results/e125-cloud/*.json
+  - prototypes/violation-forecast/results/e125-cloud/stage-logs/*.log

@@ -1,0 +1,55 @@
+# E102 (experiments/E102-lookalike-negatives.md): E79 v2's 9B states on the look-alike configs (InjecForks v1.4), so the frozen
+# probes can be scored on them. Same model, revision, layers and reads as configs/e79v2-9b-pod.yaml; only the rows differ.
+# The same pod then runs the Distill observer on the same rows (configs/e102-distill-lookalike.yaml). Fill config_sha256 before launch.
+experiment: E102
+out_name: e102-lookalike
+artifact_repo: anonymous/e79v2-states
+dataset_revision: v1.4
+upload_every_s: 600
+min_cache_cosine: 0.995
+generator:
+  model_id: Qwen/Qwen3.5-9B
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 32
+d_model: 4096
+layers: [8, 12, 16, 20, 24, 26, 28, 30, 32]
+ncut: [8, 16, 32, 64, 128]
+select:            # dev: every row (thresholds and false-alarm rates); test: the eval-v1.2 rows (4 per case)
+  smoke-lookalike: {dev: all, test: eval}
+  realistic-lookalike: {dev: all, test: eval}
+smoke_generator:   # local 6 GB check of every line the pod runs; the 9B tokenizer so the billed-token assertion holds
+  model_id: Qwen/Qwen3.5-0.8B
+  revision: 2fc06364715b967f1860aea9cf38778875588b17
+  tokenizer_id: Qwen/Qwen3.5-9B
+  tokenizer_revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 24
+smoke_layers: [6, 12, 18, 24]
+smoke_d_model: 1024
+smoke_cases: 2
+config_sha256:
+  injecforks_states.py: 0d9213e3e07b1a61c7afc0a8078cf0fd9fe128e502395c1f4bbd6771a8ffb276
+  injecforks_load.py: d8eea093f0cf4c934e73a13146e7b29aea106f83dcd905f27822d5f1c05e19a5
+  common.py: e4c45bae1d43fecea51f477c4552c9ce6af60c1d2aacf3403f99a9cf2db8c669
+  run_e102_pod.sh: 2f48d03826d4690a668754c1f9ed2abb906417699651924815cc62c2646b54c1
+  injecforks_observer_states.py: 6dc0033ac1ba05881bcaf5613f25ab64f5c9ce378397628c3fa88e59d81389ad
+  observer_render.py: 0524deefedaac08cd367214054b8c968b4b3c0f0c65ccff3b23d1e9d00bd84ee
+  configs/e102-distill-lookalike.yaml: b6160bd87a4b3c196df6b571f9ff928a105e3d59f42f6dc6a4be466b67f76fa7
+pod:
+  script: prototypes/violation-forecast/run_e102_pod.sh
+  model_id: Qwen/Qwen3.5-9B
+  dtype: bf16
+  vram_gib: 40
+  container_disk_gb: 80
+  volume: false              # run_e79v2_pod.sh builds its own venv and downloads the weights: any datacenter (CA-MTL-3 had no stock, 2026-10-25)
+  cuda_versions: any         # no RunPod filter, as E81 (newer drivers cannot be named; bootstrap enforces min_cuda)
+  min_cuda: "13.0"           # torch==2.14.0 from PyPI is the cu130 build
+  est_hours_reference: 0.3   # 400 cases x 2 models (E79 v2: 3.3k cases 0.9 h; E101: 3.3k cases 1.03 h of forwards on an A40) + setup x 2
+  results:
+  - prototypes/violation-forecast/results/e79v2-cloud/e102-lookalike/*.json
+  - prototypes/violation-forecast/results/e79v2-cloud/e102-lookalike/stage-logs/*.log
+  - prototypes/violation-forecast/results/e102-distill-lookalike-cloud/*.json
+  - prototypes/violation-forecast/results/e102-cloud/stage-logs/*.log

@@ -1,0 +1,120 @@
+{
+ "weights": {
+  "attack": 0.25,
+  "twin": 0.5,
+  "lookalike": 0.25
+ },
+ "rate": 0.1,
+ "calibration": {
+  "attack": "E109 3b, 699 runs",
+  "twin": "E107 test twins, 704 runs",
+  "lookalike": "E107 test look-alikes, 704 runs"
+ },
+ "gates": {
+  "comply_R0": {
+   "pooled": {
+    "threshold": -0.4893999993801117,
+    "calibration_rate": 0.09835479256080157,
+    "fire": {
+     "attack": 0.39341917024320455,
+     "twin": 0.0,
+     "lookalike": 0.0
+    }
+   },
+   "lookalike": {
+    "threshold": -2.69635009765625,
+    "calibration_rate": 0.09659090909090909
+   }
+  },
+  "comply_A": {
+   "pooled": {
+    "threshold": -0.6336979866027832,
+    "calibration_rate": 0.09995254990896114,
+    "fire": {
+     "attack": 0.2932761087267525,
+     "twin": 0.02130681818181818,
+     "lookalike": 0.06392045454545454
+    }
+   },
+   "lookalike": {
+    "threshold": -1.0357812643051147,
+    "calibration_rate": 0.09943181818181818
+   }
+  },
+  "exposure_n0": {
+   "pooled": {
+    "threshold": 13.513410568237305,
+    "calibration_rate": 0.09898881519053224,
+    "fire": {
+     "attack": 0.35050071530758226,
+     "twin": 0.0,
+     "lookalike": 0.045454545454545456
+    }
+   },
+   "lookalike": {
+    "threshold": 12.159204483032227,
+    "calibration_rate": 0.09659090909090909
+   }
+  },
+  "exposure_M": {
+   "pooled": {
+    "threshold": 9.631872132513314,
+    "calibration_rate": 0.09978540772532232,
+    "fire": {
+     "attack": 0.39914163090128757,
+     "twin": 0.0,
+     "lookalike": 0.0
+    }
+   },
+   "lookalike": {
+    "threshold": -1.0441621129805727,
+    "calibration_rate": 0.09659090909090909
+   }
+  },
+  "risk_M": {
+   "pooled": {
+    "threshold": -1.8507570001923266,
+    "calibration_rate": 0.0997650864871899,
+    "fire": {
+     "attack": 0.3876967095851216,
+     "twin": 0.0,
+     "lookalike": 0.011363636363636364
+    }
+   },
+   "lookalike": {
+    "threshold": -3.466379262874014,
+    "calibration_rate": 0.09659090909090909
+   }
+  },
+  "r0a": {
+   "pooled": {
+    "threshold": -0.046090126037597656,
+    "calibration_rate": 0.09977270695148954,
+    "fire": {
+     "attack": 0.39198855507868385,
+     "twin": 0.0,
+     "lookalike": 0.007102272727272727
+    }
+   },
+   "lookalike": {
+    "threshold": -1.483149766921997,
+    "calibration_rate": 0.09943181818181818
+   }
+  },
+  "monitor": {
+   "pooled": {
+    "threshold": 0.25,
+    "calibration_rate": 0.09780154685264691,
+    "fire": {
+     "attack": 0.28183118741058655,
+     "twin": 0.0,
+     "lookalike": 0.109375
+    }
+   },
+   "lookalike": {
+    "threshold": 0.3,
+    "calibration_rate": 0.09801136363636363
+   }
+  }
+ }
+}

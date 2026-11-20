@@ -1,0 +1,49 @@
+# Self-report baseline on InjecForks v1.2 dev (experiments/E094-monitor-selfreport-baselines.md): Qwen3.5-9B BF16 forked at every N
+# and asked the E80 questions. Fill config_sha256 (sha256sum of the three files) right before launch; `prep` prints the size.
+experiment: E094
+dataset_revision: v1.2
+min_cache_cosine: 0.995
+max_cache_dq: 0.05           # bf16 rounding alone moved q by up to 0.028 on the 0.8B smoke (fp32: identical to 4 decimals)
+generator:
+  model_id: Qwen/Qwen3.5-9B
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 32
+ncut: [8, 16, 32, 64, 128]
+select:            # eval = the eval-v1.2 rows: every mixed dev case (injected) and every benign dev case, 4 rollouts
+  smoke: {dev: eval}
+  realistic: {dev: eval}
+  smoke-benign: {dev: eval}
+  realistic-benign: {dev: eval}
+sampling: {temperature: 1.0, top_p: 0.95, top_k: 20, presence_penalty: 1.5}   # the E78 v2 request bodies (contcheck only)
+contcheck_rollouts: 5
+contcheck_n: [16, 64]
+contcheck_new_tokens: 384
+smoke_generator:   # local check of every line the pod runs; the 9B tokenizer so the billed-token assertion holds
+  model_id: Qwen/Qwen3.5-0.8B
+  revision: 2fc06364715b967f1860aea9cf38778875588b17
+  tokenizer_id: Qwen/Qwen3.5-9B
+  tokenizer_revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 24
+smoke_cases: 2
+config_sha256:     # the files run user-selfreport-9b-pod-20261027T192700Z used (commit c6a6f2f); the script has since gained check, export and fp32 stages
+  injecforks_selfreport.py: 7babdf522e427d5e37ab507a48d114125205829112a2c4815ed6a06fcc0f575f
+  injecforks_states.py: ea7e64367bade96922a7e0030c0e51d66930f434d75f396c685d0b9b473252f9
+  run_selfreport_pod.sh: 6d6a3c22bfd7062862568d2fdecb688130d97a4ca6a05f5fdc7416ebfffc0a79
+pod:
+  script: prototypes/violation-forecast/run_selfreport_pod.sh
+  model_id: Qwen/Qwen3.5-9B
+  dtype: bf16
+  vram_gib: 40
+  container_disk_gb: 80
+  volume: false              # the script builds its own venv and downloads the weights: any datacenter
+  cuda_versions: any
+  min_cuda: "13.0"           # torch==2.14.0 from PyPI is the cu130 build
+  est_hours_reference: 0.8   # setup ~15 min + ~550 prompt forwards + ~2.9k rows x <= 5 cached segments + ~15k fork batches of 6
+  results:
+  - prototypes/violation-forecast/results/selfreport-cloud/*.json
+  - prototypes/violation-forecast/results/selfreport-cloud/*.jsonl
+  - prototypes/violation-forecast/results/selfreport-cloud/stage-logs/*.log

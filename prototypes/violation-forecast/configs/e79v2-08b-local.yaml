@@ -1,0 +1,65 @@
+# 0.8B local run over smoke train/dev: exercises injecforks_probe.py end to end. Not E79's data.
+experiment: E79v2-local-0.8B (code check only, not E79 data)
+artifact_repo: anonymous/e79v2-states
+dataset_revision: v1.2
+upload_every_s: 600
+min_cache_cosine: 0.995
+generator:
+  model_id: Qwen/Qwen3.5-9B
+  revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 32
+d_model: 4096
+layers:
+- 8
+- 12
+- 16
+- 20
+- 24
+- 26
+- 28
+- 30
+- 32
+ncut:
+- 8
+- 16
+- 32
+- 64
+- 128
+select:
+  smoke:
+    train: all
+    dev: all
+  smoke-benign:
+    train: all
+    dev: all
+smoke_generator:
+  model_id: Qwen/Qwen3.5-0.8B
+  revision: 2fc06364715b967f1860aea9cf38778875588b17
+  tokenizer_id: Qwen/Qwen3.5-9B
+  tokenizer_revision: c202236235762e1c871ad0ccb60c8ee5ba337b9a
+  quant: bf16
+  loader: qwen35_vlm_text
+  n_layers: 24
+smoke_layers:
+- 6
+- 12
+- 18
+- 24
+smoke_d_model: 1024
+smoke_cases: 2
+config_sha256:
+  injecforks_states.py: FILL
+  common.py: FILL
+  run_e79v2_pod.sh: FILL
+pod:
+  script: prototypes/violation-forecast/run_e79v2_pod.sh
+  model_id: Qwen/Qwen3.5-9B
+  dtype: bf16
+  vram_gib: 40
+  container_disk_gb: 80
+  est_hours_reference: 1.0
+  results:
+  - prototypes/violation-forecast/results/e79v2-cloud/*.json
+  - prototypes/violation-forecast/results/e79v2-cloud/stage-logs/*.log
